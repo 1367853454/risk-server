@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.graduation.project.risk.project.dal.mybaits.dao.BlacklistRecordMapper">
+
+    <select id="getBlacklistRecordPage"
+            resultType="com.graduation.project.risk.project.dal.mybaits.dataobject.BlackListRecordSearchDO">
+        SELECT
+        a.id,a.name,a.id_number as idNumber,a.phone_number as phoneNumber,operator_time as operatorTime,
+        a.operator_type as operatorType,a.reason,a.type,a.create_time as createTime,a.update_time as updateTime,b.name as operatorName
+        from blacklist_record a LEFT JOIN sys_user b on a.operator_id = b.id
+        where 1=1
+        <if test="phoneNumber !=null and phoneNumber != ''">
+            and phone_number = #{phoneNumber}
+        </if>
+        <if test="idNumber !=null and idNumber != ''">
+            and id_number = #{idNumber}
+        </if>
+        <if test="operatorId !=null and operatorId != ''">
+            and operator_id = #{operatorId}
+        </if>
+        <if test="behavior !=null and behavior != ''">
+            and operator_type = #{behavior}
+        </if>
+        <if test="beginTime !=null and beginTime != ''">
+            <![CDATA[ and a.operator_time >= #{beginTime}]]>
+        </if>
+        <if test="endTime !=null and endTime != ''">
+            <![CDATA[ and a.operator_time <= #{endTime}]]>
+        </if>
+        order by a.create_time desc
+    </select>
+
+
+
+
+</mapper>

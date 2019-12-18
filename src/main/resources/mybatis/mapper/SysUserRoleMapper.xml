@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.graduation.project.risk.project.dal.mybaits.dao.SysUserRoleMapper">
+
+    <select id="getSysRole" resultType="com.graduation.project.risk.project.web.vo.system.RoleVO">
+         select
+        a.name,
+        a.id as roleId
+        from
+        sys_role as a
+        inner join
+        sys_user_role as b
+        on a.id = b.role_id
+        and b.user_id = #{Userid}
+    </select>
+
+
+</mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.graduation.project.risk.project.dal.mybaits.dao.RuleVariableMapper">
+
+   <select id="variableSearch" resultType="com.graduation.project.risk.project.web.vo.rule.RuleVariableVO">
+       select
+       id as variableId, business_name as businessName, variable_name as variableName, variable_describe as variableDescribe,
+       variable_type as variableType, data_type as dataType, if_can_null as ifCanNull, default_data as defaultData,script_type as scriptType
+       from rule_variable
+
+       <where>
+           <if test="variableName != null and variableName != ''">
+               variable_name = #{variableName}
+           </if>
+           <if test="businessCode != null and businessCode != ''">
+               and business_code = #{businessCode}
+           </if>
+           <if test="variableType != null and variableType != ''">
+               and variable_type = #{variableType}
+           </if>
+           <if test="dataType != null and dataType != ''">
+               and data_type = #{dataType}
+           </if>
+           <if test="variableDescribe != null and variableDescribe != ''">
+               and variable_describe like concat( '%'  ,  '${variableDescribe}' , '%' )
+           </if>
+       </where>
+       order by id asc
+   </select>
+
+    <select id="getRuleVariableInfo" resultType="com.graduation.project.risk.project.web.vo.rule.RuleVariableVO">
+       select
+       a.id as variableId,a.business_name as businessName, a.variable_name as variableName, a.variable_describe as variableDescribe,
+       a.variable_type as variableType, a.data_type as dataType, a.if_can_null as ifCanNull, a.default_data as defaultData,
+       c.variable_name as systemName, a.script_type as scriptType, a.schematic, a.title, a.description, a.script_content as scriptContent, a.system_variable_id as systemVariableId
+       from rule_variable as a
+       inner join
+       pp_rule_system_variable as c
+       on a.system_variable_id = c.id
+       where a.id = #{variableId}
+    </select>
+
+
+</mapper>

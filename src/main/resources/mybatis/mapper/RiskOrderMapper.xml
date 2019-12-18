@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.graduation.project.risk.project.dal.mybaits.dao.RiskOrderMapper">
+
+    <select id="riskOrderSearch" resultType="com.graduation.project.risk.project.web.vo.decision.RiskOrderVO">
+        select
+        info.order_code as orderCode, info.full_name as fullName, info.mobile, info.application_amount as applicationAmount, info.create_time as createTime,
+        info.business_name as businessName, info.term_of_loan as termOfLoan
+        from pp_risk_loan_info as info
+        inner join pp_risk_loan_result as result
+        on info.order_code = result.order_code
+        <where>
+            <if test="startDate != null and startDate != ''">
+                <![CDATA[ info.create_time >= #{startDate}]]>
+            </if>
+            <if test="endDate != null and endDate != ''">
+                <![CDATA[ and info.create_time <= #{endDate}]]>
+            </if>
+            <if test="dataType != null and dataType != ''">
+                and result.result = #{dataType}
+            </if>
+        </where>
+
+    </select>
+
+    <select id="getOrderInfo" resultType="com.graduation.project.risk.project.biz.dto.RiskOrderDTO">
+        select
+        a.order_code as orderCode, a.create_time as applicationTime, a.business_code as businessCode, a.salary_day as salaryDay, a.device_id as deviceId, a.application_amount as applicationAmount,
+        a.person_province as personProvince, a.person_city as personCity, a.person_district as personDistrict, a.company_name as companyName, a.job_title as jobTitle, a.job_level as jobLevel,
+        a.job_type as jobType, a.monthly_salary as monthlySalary, a.lowest_monthly_salary as lowestMonthlySalary, a.highest_monthly_salary as highestMonthlySalary, a.start_of_employment as startOfEmployment,
+        a.occupation_province as occupationProvince, a.occupation_city as occupationCity, a.occupation_district as occupationDistrict, a.lng, a.lat, a.ktp_no as ktpNo, a.mobile, a.marital_status as maritalStatus,
+        a.gender, a.email, a.education, a.full_name as fullName, a.religion, a.term_of_loan as term_of_loan,
+        b.contact_name1 as contactName1, b.contact_phone1 as contactPhone1, b.contact_relation1 as contactRelation1,
+        b.contact_name2 as contactName2, b.contact_phone2 as contactPhone2, b.contact_relation2 as contactRelation2,
+        b.contact_name3 as contactName3, b.contact_phone3 as contactPhone3, b.contact_relation3 as contactRelation3,
+        b.contact_name4 as contactName4, b.contact_phone4 as contactPhone4, b.contact_relation4 as contactRelation4,
+        b.contact_name5 as contactName4, b.contact_phone5 as contactPhone5, b.contact_relation5 as contactRelation5
+        from
+        pp_risk_loan_info as a
+        inner join pp_risk_loan_other_contacts as b
+        on a.order_code = b.order_code
+        where a.order_code in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>

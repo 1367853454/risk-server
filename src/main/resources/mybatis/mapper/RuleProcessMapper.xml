@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.graduation.project.risk.project.dal.mybaits.dao.RuleProcessMapper">
+
+    <select id="processSearch" resultType="com.graduation.project.risk.project.web.vo.rule.RuleProcessVO">
+        select
+        id as processId, business_name as businessName, process_code as processCode, process_name as processName, process_describe as processDescribe,
+        trigger_link as triggerLink, update_time as updateTime
+        from rule_process
+        <where>
+            <if test="businessCode != null and businessCode != ''">
+                business_code = #{businessCode}
+            </if>
+            <if test="processName != null and processName != ''">
+                and process_name = #{processName}
+            </if>
+            and flag = #{status}
+        </where>
+        order by id asc
+    </select>
+
+    <select id="packageSearch" resultType="com.graduation.project.risk.project.web.vo.rule.RuleProcessPackageVO">
+        select
+        a.id as packageId,
+        a.package_code as packageCode,
+        a.package_name as packageName,
+        b.rule_package_ordered_number as orderNumber
+        from rule_package as a
+        inner join rule_process_package_rel as b
+        on b.rule_package_code = a.package_code
+        and a.flag = #{flag}
+        and a.publish_status = #{status}
+        and b.flag = #{flag}
+        and b.rule_process_id = #{processId}
+    </select>
+
+
+</mapper>

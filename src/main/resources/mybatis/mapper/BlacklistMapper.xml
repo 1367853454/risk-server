@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.graduation.project.risk.project.dal.mybaits.dao.BlacklistMapper">
+
+    <update id="updateAddUserIntoBlacklist">
+        update blacklist_idcard set name = #{name }, hj_blacklist_ind = #{hjBlacklistInd}, hj_blacklist_time = #{hjBlacklistTime},
+        type = #{type}, status = #{status}, update_time = #{updateTime}
+        where idcard = #{idcard}
+    </update>
+
+
+    <select id="getBlackListSearchDOByIdNumber"
+            resultType="com.graduation.project.risk.project.dal.mybaits.dataobject.BlackListSearchDO">
+        SELECT
+        a.idcard AS idNumber,
+        a.id AS blacklistIdCardId,
+        b.mobile,
+        b.id AS mobileId,
+        a.`name`,
+        a.`status`,
+        a.hj_blacklist_time AS applicationTime
+        FROM
+        blacklist_idcard AS a left JOIN
+        blacklist_mobile AS b
+        on
+        a.id = b.blacklist_idcard_id
+        where a.idcard = #{idNumber}
+        and a.status = #{status}
+        and b.status = #{status}
+        and a.type = #{type}
+        and b.type = #{type}
+    </select>
+
+
+    <select id="getBlackListSearchDOByPhoneNumber"
+            resultType="com.graduation.project.risk.project.dal.mybaits.dataobject.BlackListSearchDO">
+        SELECT
+        a.idcard AS idNumber,
+        a.id AS blacklistIdcardId,
+        b.mobile,
+        b.id AS mobileId,
+        a.`name`,
+        a.`status`,
+        a.hj_blacklist_time AS applicationTime
+        FROM
+        blacklist_idcard AS a left JOIN
+        blacklist_mobile AS b
+        on
+        a.id = b.blacklist_idcard_id
+        where a.id = (SELECT
+        a.blacklist_idcard_id as idcardId
+        from blacklist_mobile a
+        where a.mobile=#{phoneNumber}
+        and a.status = #{status}
+        and b.status = #{status}
+        and a.type = #{type}
+        and b.type = #{type})
+    </select>
+
+    <select id="getBlackListMobileDOByBlacklistIdcardId"
+            resultType="com.graduation.project.risk.project.dal.jpa.dataobject.blacklist.BlackListMobileDO">
+        SELECT
+            a.id,
+            a.mobile,
+            a.`name`,
+            a.blacklist_idcard_id AS blacklistIdcardId,
+            a.blacklist_reasons AS blacklistReasons,
+            a.severity,
+            a.blacklist_time AS blacklistTime,
+            a.corp_blacklist_time AS corpBlacklistTime,
+            a.corp_blacklist_ind AS corpBlacklistInd,
+            a.hj_blacklist_ind AS hjBlacklistInd,
+            a.hj_blacklist_time AS hjBlacklistTime,
+            a.operator_id AS operatorId,
+            a.type,
+            a.`status`,
+            a.update_time AS updateTime,
+            a.create_time AS createTime
+        FROM
+            blacklist_mobile AS a
+            INNER JOIN blacklist_idcard AS b ON a.blacklist_idcard_id = b.id
+            AND a.`status` = 'normal'
+            AND a.type = 'black'
+            AND b.`status` = 'normal'
+            AND b.type = 'black'
+            AND b.id = #{blacklistIdcardId}
+    </select>
+
+
+</mapper>

@@ -1,0 +1,49 @@
+package com.huijie.xcode.drools.chushen;
+import com.graduation.project.risk.project.biz.dto.RuleFactResult;
+import com.graduation.project.risk.project.biz.dto.RuleFactParams;
+import java.lang.String;
+import java.util.Map;
+import java.util.List;
+import java.util.HashMap;
+import com.graduation.project.risk.project.biz.manager.DroolsRuleManager;
+global RuleFactResult _result;
+import com.graduation.project.risk.project.dal.jpa.dataobject.pp.PpSystemVariableBO;
+
+rule "年龄26"
+when
+PpSystemVariableBO(pAge<21 || pAge>50)
+then
+_result.getMap().put("26","REJECT_PACKAGE,RESULT,==,REJECT");
+end
+
+rule "本人命中内部黑名单27"
+when
+PpSystemVariableBO(pApplicantIsOnTheBlacklist==1)
+then
+_result.getMap().put("27","REJECT_PACKAGE,RESULT,==,REJECT");
+end
+
+rule "年龄和婚姻状况28"
+when
+PpSystemVariableBO(pAge>40 && pMaritalStatus==4)
+then
+_result.getMap().put("28","REVIEW_PACKAGE,RESULT,==,REVIEW");
+end
+
+rule "性别年龄婚姻状况29"
+when
+PpSystemVariableBO(pGender==2 && pAge>35 && pMaritalStatus==2)
+then
+_result.getMap().put("29","REVIEW_PACKAGE,RESULT,==,REVIEW");
+end
+
+rule "ruleRecord"
+salience -1
+when
+$manage:DroolsRuleManager()
+then
+_result.getMap().put("orderCode",_result.getOrderCode());
+_result.getMap().put("businessCode","100");
+_result.getMap().put("processCode","chushen");
+$manage.recordSimulationExcuteResult(_result.getMap());
+end

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.graduation.project.risk.project.dal.mybaits.dao.HomeStatisticsMapper">
+
+    <select id="getStatisticsInfo" resultType="com.graduation.project.risk.project.dal.mybaits.dataobject.HomeStatisticsDO">
+        SELECT
+        DATE_FORMAT(r.create_time, "%Y-%m-%d") AS staticticsDate,
+        COUNT(r.id) AS totalNumber,
+        sum(CASE r.result when 'REJECT' THEN 1 ELSE 0 END) AS rejectEventNumber,
+        sum(CASE r.result when 'PASS' THEN 1 ELSE 0 END) AS passEventNumber,
+        sum(CASE r.result when 'REVIEW' THEN 1 ELSE 0 END) AS reviewEventNumber,
+        ROUND(sum(CASE r.result when 'REJECT' THEN 1 ELSE 0 END)/ COUNT(r.id) ,2) AS rejectRate,
+        ROUND(sum(CASE r.result when 'PASS' THEN 1 ELSE 0 END)/ COUNT(r.id) ,2) AS passRate,
+        ROUND(sum(CASE r.result when 'REVIEW' THEN 1 ELSE 0 END)/ COUNT(r.id) ,2) AS reviewRate
+        FROM pp_risk_loan_result r
+        INNER JOIN pp_risk_loan_info i ON r.order_code = i.order_code
+        <where>
+            <if test="startDate != null and startDate != ''">
+                <![CDATA[ r.create_time >= #{startDate}]]>
+            </if>
+            <if test="stopDate != null and stopDate != ''">
+                <![CDATA[ and r.create_time <= #{stopDate}]]>
+            </if>
+            <if test="personProvince != null and personProvince != ''">
+                and i.person_province = #{personProvince}
+            </if>
+        </where>
+        GROUP BY DATE_FORMAT(r.create_time, "%Y-%m-%d")
+    </select>
+
+</mapper>

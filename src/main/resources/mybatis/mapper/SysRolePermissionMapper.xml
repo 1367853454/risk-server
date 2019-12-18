@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.graduation.project.risk.project.dal.mybaits.dao.SysRolePermissionMapper">
+
+    <select id="getPermission" resultType="com.graduation.project.risk.project.web.vo.system.SysRole">
+        select
+        a.id,
+        a.parent_id as parentId
+        from
+        sys_permission as a
+        inner join
+        sys_role_permission as c
+        on c.permission_id = a.id
+        inner join
+        sys_role as b
+        on b.id = c.role_id
+        and b.id = #{id}
+        order by a.id asc
+    </select>
+
+</mapper>

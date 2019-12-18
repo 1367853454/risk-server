@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration scan="true">
+
+
+    <!--
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <property name="LOG_FILE"
+              value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/spring.log}"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+    <include resource="org/springframework/boot/logging/logback/file-appender.xml"/>
+
+    <property name="log.path" value="/data/logs/core-server"/>
+
+    <!-- The FILE and ASYNC appenders are here as examples for a production configuration -->
+
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <resetJUL>true</resetJUL>
+    </contextListener>
+
+
+    <appender name="DEFAULT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/default.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/default.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>90</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>utf-8</charset>
+            <Pattern>%d %-5level %logger{0}: %msg%n</Pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/error.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>90</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>utf-8</charset>
+            <Pattern>%d %-5level %logger{0}: %msg%n</Pattern>
+        </encoder>
+
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+
+    </appender>
+
+
+    <appender name="DAL_DIGEST_LOGGER_APPENDER"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/huijie-dal-digest.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/huijie-dal-digest.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>90</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>utf-8</charset>
+            <Pattern>%d %-5level %logger{0}: %msg%n</Pattern>
+        </encoder>
+
+    </appender>
+
+    <appender name="SAL_DIGEST_LOGGER_APPENDER"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/huijie-api-sal-digest.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/huijie-api-sal-digest.%d{yyyy-MM-dd}.log
+            </fileNamePattern>
+            <maxHistory>90</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>utf-8</charset>
+            <Pattern>%d %-5level %logger{0}: %msg%n</Pattern>
+        </encoder>
+
+    </appender>
+
+    <appender name="SERVICE_DIGEST_LOGGER_APPENDER"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/huijie-service-digest.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/huijie-service-digest.%d{yyyy-MM-dd}.log
+            </fileNamePattern>
+            <maxHistory>90</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>utf-8</charset>
+            <Pattern>%d %-5level %logger{0}: %msg%n</Pattern>
+        </encoder>
+
+    </appender>
+
+    <logger name="com.huijie.xlab" level="info" additivity="false">
+        <appender-ref ref="DEFAULT"/>
+        <appender-ref ref="ERROR"/>
+    </logger>
+
+    <logger name="DAL_DIGEST_LOGGER" level="info" additivity="false">
+        <appender-ref ref="DAL_DIGEST_LOGGER_APPENDER"/>
+        <appender-ref ref="ERROR"/>
+    </logger>
+
+    <logger name="SAL_DIGEST_LOGGER" level="info" additivity="false">
+        <appender-ref ref="SAL_DIGEST_LOGGER_APPENDER"/>
+        <appender-ref ref="ERROR"/>
+    </logger>
+
+
+    <logger name="SERVICE_DIGEST_LOGGER" level="info" additivity="false">
+        <appender-ref ref="SAL_DIGEST_LOGGER_APPENDER"/>
+        <appender-ref ref="ERROR"/>
+    </logger>
+
+
+    <logger name="javax.activation" level="WARN"/>
+    <logger name="javax.mail" level="WARN"/>
+    <logger name="javax.xml.bind" level="WARN"/>
+    <logger name="ch.qos.logback" level="WARN"/>
+    <logger name="com.codahale.metrics" level="WARN"/>
+    <logger name="com.netflix" level="WARN"/>
+    <logger name="com.netflix.discovery" level="INFO"/>
+    <logger name="com.ryantenney" level="WARN"/>
+    <logger name="com.sun" level="WARN"/>
+    <logger name="com.zaxxer" level="WARN"/>
+    <logger name="io.undertow" level="WARN"/>
+    <logger name="org.apache" level="WARN"/>
+    <logger name="org.apache.catalina.startup.DigesterFactory" level="OFF"/>
+    <logger name="org.bson" level="WARN"/>
+    <logger name="org.hibernate.validator" level="WARN"/>
+    <logger name="org.hibernate" level="WARN"/>
+    <logger name="org.hibernate.ejb.HibernatePersistence" level="OFF"/>
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.springframework.web" level="WARN"/>
+    <logger name="org.springframework.security" level="WARN"/>
+    <logger name="org.springframework.cache" level="WARN"/>
+    <logger name="org.thymeleaf" level="WARN"/>
+    <logger name="org.xnio" level="WARN"/>
+    <logger name="springfox" level="WARN"/>
+    <logger name="sun.rmi" level="WARN"/>
+    <logger name="sun.rmi.transport" level="WARN"/>
+    <logger name="org.mongodb.driver.cluster" level="INFO"/>
+    <logger name="org.springframework.social.wechat" level="DEBUG"/>
+    <logger name="com.xxl.job.core.thread.ExecutorRegistryThread" level="WARN"/>
+
+    <root level="INFO">
+        <appender-ref ref="DEFAULT"/>
+        <appender-ref ref="ERROR"/>
+    </root>
+</configuration>

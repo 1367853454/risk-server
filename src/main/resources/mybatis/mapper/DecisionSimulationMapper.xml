@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.graduation.project.risk.project.dal.mybaits.dao.DecisionSimulationMapper">
+
+    <select id="processSearch" resultType="com.graduation.project.risk.project.web.vo.decision.DecisionSimulationVO">
+        select
+        id as processId, business_name as businessName, process_name as processName, process_describe as processDescribe,
+        update_time as updateTime, business_code as businessCode, process_code as processCode, trigger_link as triggerLinkEnums
+        from rule_process
+        <where>
+            <if test="businessCode != null and businessCode != ''">
+                business_code = #{businessCode}
+            </if>
+            <if test="processCode != null and processCode != ''">
+                and process_code = #{processCode}
+            </if>
+            and flag = #{status}
+        </where>
+        order by id asc
+    </select>
+
+</mapper>

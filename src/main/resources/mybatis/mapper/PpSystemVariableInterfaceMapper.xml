@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.graduation.project.risk.project.dal.mybaits.dao.PpSystemVariableInterfaceMapper">
+
+    <select id="applicationsWithSameDeviceIDOnTheSameDay" resultType="integer">
+        select count(*) from pp_risk_loan_info where date (create_time) = curdate() and device_id = #{deviceId}
+    </select>
+
+    <select id="accountsLoggedInWithSameDeviceID" resultType="integer">
+        select COUNT(DISTINCT ktp_no) from pp_risk_loan_info where device_id = #{deviceId}
+    </select>
+
+    <select id="relevanceAmongUrgentContacts" resultType="integer">
+        select COUNT(DISTINCT ktp_no) from pp_risk_loan_info where mobile in 
+        <foreach collection="contants" index="index" item="mobile" open="(" separator="," close=")">
+            #{mobile}
+        </foreach>
+    </select>
+
+    <select id="usersWithSameEmail" resultType="integer">
+        select COUNT(DISTINCT ktp_no) from pp_risk_loan_info where email = #{email}
+    </select>
+
+    <select id="renewalApplicatioinsWithin24HoursAfterRepayment" resultType="integer">
+         select count(*)
+         from pp_risk_loan_info as info
+         inner join pp_risk_loan_status as status
+         on status.order_code = #{orderCode}
+         where info.create_time >= status.repayment_time - interval 24 hour and info.ktp_no = #{ktpNo}
+    </select>
+
+</mapper>

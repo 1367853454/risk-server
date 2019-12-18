@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.graduation.project.risk.project.dal.mybaits.dao.DecisionStatisticsMapper">
+
+
+    <select id="statistics" resultType="com.graduation.project.risk.project.web.vo.decision.DecisionStatisticsVO">
+        select b.package_name as packageName, a.rule_name as ruleName, a.update_time as updateTime,c.result as result,
+        COUNT(DISTINCT e.ktp_no , c.result = 'REJECT', c.rule_id) as rejectCustomers,
+        ROUND(COUNT(DISTINCT e.ktp_no , c.result = 'REJECT', c.rule_id) / (select COUNT(DISTINCT b.ktp_no) from pp_risk_loan_result as a inner join pp_risk_loan_info as b on a.order_code = b.order_code),3) as rejectionRate,
+        ROUND(COUNT(DISTINCT e.ktp_no , c.result = 'REJECT', c.rule_id) / (select COUNT(DISTINCT b.ktp_no ) from rule_excute_record as a inner join pp_risk_loan_info as b on a.order_code = b.order_code and a.result = 'REJECT'),3) as percentageOfRejection
+        from
+        rule as a
+        inner join rule_package as b
+        on a.rule_package_id = b.id
+        inner join rule_excute_record as c
+        on c.package_code = b.package_code and c.rule_id  = a.id
+        inner join pp_risk_loan_info as e
+        on e.order_code = c.order_code
+		<where>
+            <if test="startDate != null and startDate != ''">
+                <![CDATA[ e.create_time >= #{startDate}]]>
+            </if>
+            <if test="endDate != null and endDate != ''">
+                <![CDATA[ and e.create_time <= #{endDate}]]>
+            </if>
+            <if test="packageCode != null and packageCode != ''">
+                and b.package_code = #{packageCode}
+            </if>
+            <if test="flag != null and flag != ''">
+                and a.flag = #{flag}
+            </if>
+            <if test="status != null and status != ''">
+                and b.publish_status = #{status}
+            </if>
+            <if test="processCode != null and processCode != ''">
+                and c.process_code = #{processCode}
+            </if>
+        </where>
+        GROUP BY
+        b.package_name,a.rule_name,a.update_time,c.result
+    </select>
+
+    <select id="packageVO" resultType="com.graduation.project.risk.project.web.vo.decision.DecisionStatisticsPackageVO">
+        select
+        a.result,
+        c.package_name as packageName,
+        (select COUNT(DISTINCT b.ktp_no)
+        from pp_risk_loan_result as a
+        inner join pp_risk_loan_info as b
+        on a.order_code = b.order_code) as ApplicantNumber,
+        COUNT(DISTINCT b.ktp_no, a.result = 'REJECT') as rejectCustomers,
+        ROUND(COUNT(DISTINCT b.ktp_no, a.result = 'REJECT') / (select COUNT(DISTINCT b.ktp_no) from pp_risk_loan_result as a inner join pp_risk_loan_info as b on a.order_code = b.order_code),3) as rejectionRate
+        from rule_excute_record as a
+        inner join pp_risk_loan_info as b
+        on a.order_code = b.order_code
+        inner join rule_package as c
+        on c.package_code = a.package_code
+        <where>
+            <if test="startDate != null and startDate != ''">
+                <![CDATA[ b.create_time >= #{startDate}]]>
+            </if>
+            <if test="endDate != null and endDate != ''">
+                <![CDATA[ and b.create_time <= #{endDate}]]>
+            </if>
+            <if test="packageCode != null and packageCode != ''">
+                and c.package_code = #{packageCode}
+            </if>
+            <if test="status != null and status != ''">
+                and c.publish_status = #{status}
+            </if>
+            <if test="processCode != null and processCode != ''">
+                and a.process_code = #{processCode}
+            </if>
+        </where>
+        group by
+        c.package_name,a.result
+    </select>
+
+    <select id="funnel" resultType="com.graduation.project.risk.project.web.vo.decision.DecisionStatisticsFunnelVO">
+        select
+        a.package_name as packageName, b.rule_package_ordered_number as ordered, c.result,
+        COUNT(DISTINCT d.ktp_no, c.result = 'REJECT') as rejectCustomers
+        from rule_package as a
+        inner join rule_process_package_rel as b
+        on b.rule_package_code = a.package_code
+        inner join rule_excute_record as c
+        on c.package_code = a.package_code
+        inner join pp_risk_loan_info as d
+        on d.order_code = c.order_code
+        <where>
+            <if test="startDate != null and startDate != ''">
+                <![CDATA[ d.create_time >= #{startDate}]]>
+            </if>
+            <if test="endDate != null and endDate != ''">
+                <![CDATA[ and d.create_time <= #{endDate}]]>
+            </if>
+            <if test="packageCode != null and packageCode != ''">
+                and c.package_code = #{packageCode}
+            </if>
+            <if test="status != null and status != ''">
+                and a.publish_status = #{status}
+            </if>
+            <if test="processCode != null and processCode != ''">
+                and c.process_code = #{processCode}
+            </if>
+        </where>
+        group by
+        a.package_name,b.rule_package_ordered_number,c.result
+    </select>
+
+
+</mapper>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.graduation.project.risk.project.dal.mybaits.dao.RulePackageMapper">
+
+   <select id="packageSearch" resultType="com.graduation.project.risk.project.web.vo.rule.RulePackageVO">
+       select
+       id as packageId, business_name as businessName, package_code as packageCode, package_name as packageName,
+       package_describe as packageDescribe, package_version as packageVersion, publish_status as publishStatus, update_time as updateTime
+       from rule_package
+       <where>
+           <if test="businessCode != null and businessCode != ''">
+               business_code = #{businessCode}
+           </if>
+           <if test="packageCode != null and packageCode != ''">
+               and package_code = #{packageCode}
+           </if>
+           <if test="packageName != null and packageName != ''">
+               and package_name = #{packageName}
+           </if>
+           <if test="flag != null ">
+               and flag = #{flag}
+           </if>
+       </where>
+       order by id asc
+   </select>
+
+    <select id="ruleInfo" resultType="com.graduation.project.risk.project.web.vo.rule.RuleVO">
+        select
+        a.id as ruleId, a.rule_name as ruleName, a.rule_describe as ruleDescribe, a.rule_tips as ruleTips, a.execute_condition as executeCondition, a.status,
+        d.variable_name as variableName,
+        b.compare as conditionCompare, b.compare_value as conditionCompareValue,
+        e.variable_name as resultVariableName,
+        c.compare as resultCompare , c.compare_value as resultCompareValue
+        from rule as a
+        inner join rule_condition as b
+        on a.id = b.rule_id
+        inner join rule_handle as c
+        on a.id = c.rule_id
+        inner join rule_variable as d
+        on b.rule_variable_id = d.id
+        inner join rule_variable as e
+        on c.rule_variable_id = e.id
+        inner join rule_package as f
+        on a.rule_package_id = f.id
+        where f.package_code = #{packageCode} and a.flag = #{flag} and f.package_version = #{version}
+        order by a.id asc
+    </select>
+
+    <select id="beingUsed" resultType="integer">
+        select
+        COUNT(*)
+        from rule_process_package_rel as a
+        inner join rule_package as b
+        on a.rule_package_code = b.package_code
+        inner join rule_process as c
+        on c.id = a.rule_process_id
+        where
+        b.id = #{packageId} and c.flag = #{flag} and c.publish_status = #{status}
+    </select>
+
+    <select id="release" resultType="integer">
+        select
+        COUNT(*)
+        from rule_process_package_rel as a
+        inner join rule_package as b
+        on a.rule_package_code = b.package_code
+        where
+        b.business_code = #{businessCode} and a.rule_package_code = #{packageCode} and a.flag = #{flag}
+    </select>
+
+
+</mapper>

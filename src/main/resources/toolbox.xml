@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toolbox>
+    <tool>
+        <key>date</key>
+        <scope>application</scope>
+        <class>org.apache.velocity.tools.generic.DateTool</class>
+    </tool>
+
+    <tool>
+        <key>helper</key>
+        <scope>application</scope>
+        <class>com.graduation.project.risk.project.util.VelocityHelper</class>
+    </tool>
+</toolbox>

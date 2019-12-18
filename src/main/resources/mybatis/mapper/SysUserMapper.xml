@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.graduation.project.risk.project.dal.mybaits.dao.SysUserMapper">
+
+   <select id="userSearch" resultType="com.graduation.project.risk.project.web.vo.system.SysUserSearchVO">
+       select
+       id as userId,name,account,status,mobile,create_time as createTime, update_time as updateTime
+       from sys_user
+       <where>
+           <if test="name != null and name != ''">
+              name like concat( '%'  ,  '${name}' , '%' )
+           </if>
+           <if test="status != null and status != ''">
+              and status = #{status}
+           </if>
+       </where>
+       order by id asc
+   </select>
+
+
+</mapper>

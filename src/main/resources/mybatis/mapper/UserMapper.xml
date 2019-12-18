@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.graduation.project.risk.project.dal.mybaits.dao.UserMapper">
+
+    <select id="getUserByAccount" resultType="com.graduation.project.risk.project.dal.jpa.dataobject.sys.SysUserDO" >
+        select a.id,a.name,a.account,a.password,a.remark,a.status,a.create_time as createTime,
+        a.update_time as updateTime from sys_user a where a.account = #{account} and a.status = 'normal'
+    </select>
+
+    <select id="getSysRoleByUserId" resultType="com.graduation.project.risk.project.dal.jpa.dataobject.sys.SysRoleDO" >
+        SELECT
+        c.id,
+        c.`name`,
+        c.description,
+        c.create_time AS createTime,
+        c.update_time AS updateTime
+        FROM
+            sys_user AS a
+            INNER JOIN sys_user_role AS b ON a.id = b.user_id
+            INNER JOIN sys_role AS c ON c.id = b.role_id
+        WHERE
+            a.id = #{userId}
+    </select>
+
+    <select id="getPermissionByUserId" resultType="com.graduation.project.risk.project.dal.jpa.dataobject.sys.SysPermissionDO" >
+        SELECT
+        c.id,
+        c.parent_id AS parentId,
+        c.`name`,
+        c.href,
+        c.type,
+        c.permission,
+        c.create_time AS createTime,
+        c.update_time AS updateTime
+        FROM
+            sys_role AS a
+            INNER JOIN sys_role_permission AS b ON a.id = b.role_id
+            INNER JOIN sys_permission AS c ON c.id = b.permission_id
+        WHERE
+            a.id IN (
+        SELECT
+            c.id
+        FROM
+            sys_user AS a
+            INNER JOIN sys_user_role AS b ON a.id = b.user_id
+            INNER JOIN sys_role AS c ON c.id = b.role_id
+        WHERE
+            a.id = #{userId}
+            )
+    </select>
+
+</mapper>

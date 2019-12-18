@@ -1,0 +1,107 @@
+# ===================================================================
+# Spring Boot configuration.
+#
+# This configuration will be overriden by the Spring profile you use,
+# for example application-dev.yml if you use the "dev" profile.
+# ===================================================================
+
+# ===================================================================
+# Standard Spring Boot properties.
+# Full reference is available at:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================
+
+
+mybatis:
+    mapper-locations: classpath:mybatis/mapper/*.xml
+    type-aliases-package: com.graduation.project.risk.project.dal.mybaits.dataobject
+    type-handlers-package: com.graduation.project.risk.common.core.dal.mybatis
+    check-config-location: true
+    config-location: classpath:mybatis/mybatis-config.xml
+
+management:
+    context-path: /management
+    health:
+        mail:
+            enabled: false # When using the MailService, configure an SMTP server and set this to true
+spring:
+    application:
+        name: Risk-Server
+    jackson:
+        serialization.write_dates_as_timestamps: false
+    messages:
+        basename: i18n/messages
+        fallback-to-system-locale: false
+    mvc:
+        favicon:
+            enabled: false
+        static-path-pattern: /**
+
+    profiles:
+        # The commented value for `active` can be replaced with valid spring profiles to load.
+        # Otherwise, it will be filled in by maven when building the WAR file
+        # Either way, it can be overridden by `--spring.profiles.active` value passed in the commandline or `-Dspring.profiles.active` set in `JAVA_OPTS`
+        active: #spring.profiles.active#
+
+    cache:
+      type: guava
+      cache-names: DEFAULT
+
+    velocity:
+      suffix: .vm
+      resourceLoaderPath: classpath:/templates/
+      properties:
+        input: encoding=UTF-8
+        output: encoding=UTF-8
+      toolbox-config-location: toolbox.xml
+
+security:
+    basic:
+        enabled: false
+
+server:
+    session:
+        cookie:
+            http-only: true
+
+    port: 9065
+    context-path: /risk
+
+secret:
+  key: QzQzNjAxMDQtNEJGMC00Q0IyLUEyOTQtOEM2Mzk2RDZGRDk2
+
+#logging:
+#    file: /data/logs/xcode-risk/default.log
+
+# ===================================================================
+# JHipster specific properties
+# ===================================================================
+
+jhipster:
+    async:
+        corePoolSize: 2
+        maxPoolSize: 50
+        queueCapacity: 10000
+    cors: #By default CORS are not enabled. Uncomment to enable.
+        allowed-origins: "*"
+        allowed-methods: GET, PUT, POST, DELETE, OPTIONS
+        allowed-headers: "*"
+        exposed-headers:
+        allow-credentials: true
+        max-age: 1800
+    mail:
+        from: huijie@localhost
+    swagger:
+        title: risk-service API
+        description: risk-service API documentation
+        version: 0.0.1
+        termsOfServiceUrl:
+        contactName:
+        contactUrl:
+        contactEmail:
+        license:
+        licenseUrl:
+    ribbon:
+        # comma separated list of profiles to show a ribbon on the GUI
+        displayOnActiveProfiles: dev
+
