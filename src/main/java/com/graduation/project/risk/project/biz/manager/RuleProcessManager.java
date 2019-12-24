@@ -215,7 +215,7 @@ public class RuleProcessManager {
      */
     public void edit(ProcessEditForm processEditForm){
         RuleProcessDO exist = ruleProcessJpaDAO.findByProcessCodeAndFlag(processEditForm.getProcessCode(),CommonConstant.NORMAL_FLAG);
-        if (null != exist){
+        if (null != exist && !(exist.getId() == processEditForm.getProcessId())){
             throw new BizCoreException(ErrorCode.PACKAGE_CODE_IS_EXISTED);
         }
         RuleProcessDO edit = ruleProcessJpaDAO.findByIdAndFlag(processEditForm.getProcessId(),CommonConstant.NORMAL_FLAG);
