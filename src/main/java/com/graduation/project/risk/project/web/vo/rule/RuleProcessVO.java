@@ -21,4 +21,6 @@ public class RuleProcessVO {
 
     private Date updateTime;
 
+    private String publishStatus;
+
 }
