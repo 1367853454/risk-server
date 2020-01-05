@@ -121,17 +121,19 @@ public class DecisionSimulationManager {
         String startDate = orderSearchForm.getStartDate();
         String endDate = orderSearchForm.getEndDate();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            Long startDate_ = Long.valueOf(dateFormat.parse(startDate).getTime());
-            Long endDate_ = Long.valueOf(dateFormat.parse(endDate).getTime());
-            if (startDate_ < endDate_) {
-                dateList = findDates(startDate,endDate);
+        if (StringUtil.isNotBlank(startDate) && StringUtil.isNotBlank(endDate)) {
+            try {
+                Long startDate_ = Long.valueOf(dateFormat.parse(startDate).getTime());
+                Long endDate_ = Long.valueOf(dateFormat.parse(endDate).getTime());
+                if (startDate_ < endDate_) {
+                    dateList = findDates(startDate,endDate);
+                }
+                if (dateList.size() > 7) {
+                    throw new BizCoreException(ErrorCode.TIME_IS_TOO_LONG);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
-            if (dateList.size() > 7) {
-                throw new BizCoreException(ErrorCode.TIME_IS_TOO_LONG);
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
         }
         String dataType = orderSearchForm.getDataType();
         List<RiskOrderVO> riskOrderVO = riskOrderMapper.riskOrderSearch(startDate, endDate, dataType);
