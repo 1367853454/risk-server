@@ -40,6 +40,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -116,14 +117,17 @@ public class DecisionSimulationManager {
      */
     public Page<RiskOrderVO> riskOrderSearch(OrderSearchForm orderSearchForm) {
         PageHelper.startPage(orderSearchForm.getPageNumber(),orderSearchForm.getPageSize());
+        List<String> dateList = new ArrayList<>();
         String startDate = orderSearchForm.getStartDate();
         String endDate = orderSearchForm.getEndDate();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            Date startDate_ = dateFormat.parse(startDate);
-            Date endDate_ = dateFormat.parse(endDate);
-            Long duration = ((endDate_.getTime() - startDate_.getTime()) / (24 * 60 * 60 * 1000));
-            if (duration > 7) {
+            Long startDate_ = Long.valueOf(dateFormat.parse(startDate).getTime());
+            Long endDate_ = Long.valueOf(dateFormat.parse(endDate).getTime());
+            if (startDate_ < endDate_) {
+                dateList = findDates(startDate,endDate);
+            }
+            if (dateList.size() > 7) {
                 throw new BizCoreException(ErrorCode.TIME_IS_TOO_LONG);
             }
         } catch (ParseException e) {
@@ -135,6 +139,27 @@ public class DecisionSimulationManager {
         Page<RiskOrderVO> page = PageUtil.toPage(riskOrderVO);
 
         return page;
+    }
+
+    private List<String> findDates(String startDate, String endDate) throws ParseException {
+        List<String> allDate = new ArrayList();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date dBegin = sdf.parse(startDate);
+        Date dEnd = sdf.parse(endDate);
+        allDate.add(sdf.format(dBegin));
+        Calendar calBegin = Calendar.getInstance();
+        Calendar calEnd = Calendar.getInstance();
+        // 使用给定的Date设置此Calendar的时间
+        calBegin.setTime(dBegin);
+        calEnd.setTime(dEnd);
+        // 测试此日期是否在指定日期之后
+        while (dEnd.after(calBegin.getTime())) {
+            // 根据日历的规则，为给定的日历字段添加或减去指定的时间量
+            calBegin.add(Calendar.DAY_OF_MONTH, 1);
+            allDate.add(sdf.format(calBegin.getTime()));
+        }
+        return allDate;
     }
 
 
