@@ -1,4 +1,4 @@
-package com.huijie.xcode.drools.chushen;
+package com.graduation.drools.chushen;
 import com.graduation.project.risk.project.biz.dto.RuleFactResult;
 import com.graduation.project.risk.project.biz.dto.RuleFactParams;
 import java.lang.String;

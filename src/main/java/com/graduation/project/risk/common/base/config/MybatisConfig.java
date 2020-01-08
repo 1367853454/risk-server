@@ -67,7 +67,7 @@ public class MybatisConfig {
 
         MapperScannerConfigurer configurer = new MapperScannerConfigurer();
         configurer.setAnnotationClass(org.apache.ibatis.annotations.Mapper.class);
-        configurer.setBasePackage("com.huijie.xcode.risk.project.dal.mybatis.dao");
+        configurer.setBasePackage("com.graduation.risk.project.dal.mybatis.dao");
         configurer.setSqlSessionFactory(sqlSessionFactory);
 
         return configurer;
