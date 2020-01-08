@@ -171,7 +171,7 @@ public class BlacklistManager {
      * @Author Santos
      * @Date 2019-04-04
      * @Param [blacklistRecordForm]
-     * @return com.graduation.risk.common.model.Page
+     * @return com.graduation.project.risk.common.model.Page
      **/
     public Page getBlacklistRecord(BlacklistRecordForm blacklistRecordForm) {
         PageHelper.startPage(blacklistRecordForm.getPageNumber() , blacklistRecordForm.getPageSize());

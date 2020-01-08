@@ -146,7 +146,7 @@ public class RuleDroolsManager {
         KieSession session = null;
         try {
             //编译规则脚本,返回KieSession对象
-            if (CommonRuleEnums.SIMULATION==commonRuleEnums){
+            if (CommonRuleEnums.SIMULATION == commonRuleEnums){
                 session = DroolsUtil.getInstance().getDrlSession(droolRuleStr.toString(), processCode+CommonRuleEnums.SIMULATION.getCode());
             }
             if (CommonRuleEnums.ORDINARY==commonRuleEnums){
@@ -173,19 +173,19 @@ public class RuleDroolsManager {
 
         droolRuleStr.append("package com.graduation.drools.").append(processCode + ";").append(CommonConstant.LINE_SEPARATOR);
 
-        droolRuleStr.append("import com.graduation.risk.project.biz.dto.RuleFactResult").append(";").append(CommonConstant.LINE_SEPARATOR);
-        droolRuleStr.append("import com.graduation.risk.project.biz.dto.RuleFactParams").append(";").append(CommonConstant.LINE_SEPARATOR);
+        droolRuleStr.append("import com.graduation.project.risk.project.biz.dto.RuleFactResult").append(";").append(CommonConstant.LINE_SEPARATOR);
+        droolRuleStr.append("import com.graduation.project.risk.project.biz.dto.RuleFactParams").append(";").append(CommonConstant.LINE_SEPARATOR);
         droolRuleStr.append("import java.lang.String").append(";").append(CommonConstant.LINE_SEPARATOR);
         droolRuleStr.append("import java.util.Map").append(";").append(CommonConstant.LINE_SEPARATOR);
         droolRuleStr.append("import java.util.List").append(";").append(CommonConstant.LINE_SEPARATOR);
         droolRuleStr.append("import java.util.HashMap").append(";").append(CommonConstant.LINE_SEPARATOR);
-        droolRuleStr.append("import com.graduation.risk.project.biz.manager.DroolsRuleManager").append(";").append(CommonConstant.LINE_SEPARATOR);
+        droolRuleStr.append("import com.graduation.project.risk.project.biz.manager.DroolsRuleManager").append(";").append(CommonConstant.LINE_SEPARATOR);
 
         droolRuleStr.append("global RuleFactResult _result").append(";").append(CommonConstant.LINE_SEPARATOR);
 
         //处理pp
         if (BusinessType.pp.getCode().equals(businessCode)) {
-            droolRuleStr.append("import com.graduation.risk.project.dal.jpa.dataobject.pp.PpSystemVariableBO").append(";").append(CommonConstant.LINE_SEPARATOR).append(CommonConstant.LINE_SEPARATOR);
+            droolRuleStr.append("import com.graduation.project.risk.project.dal.jpa.dataobject.pp.PpSystemVariableBO").append(";").append(CommonConstant.LINE_SEPARATOR).append(CommonConstant.LINE_SEPARATOR);
 
             //查询pp业务的系统变量，放map里
             Map<Long, String> systemVariableMap = new HashMap<>();
@@ -287,7 +287,7 @@ public class RuleDroolsManager {
             droolRuleStr.append("_result.getMap().put").append("(").append("\"").append(CommonConstant.PROCESS_CODE).append("\"").append(",").append("\"").append(processCode)
                     .append("\"").append(")").append(";").append(CommonConstant.LINE_SEPARATOR);
 
-            if (CommonRuleEnums.SIMULATION==commonRuleEnums){
+            if (CommonRuleEnums.SIMULATION == commonRuleEnums){
                 droolRuleStr.append("$manage.recordSimulationExcuteResult(_result.getMap());").append(CommonConstant.LINE_SEPARATOR);
             }
             if (CommonRuleEnums.ORDINARY == commonRuleEnums){

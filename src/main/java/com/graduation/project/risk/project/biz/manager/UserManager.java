@@ -40,7 +40,7 @@ public class UserManager {
 //    }
 
     /**
-     * @return com.graduation.risk.project.web.vo.user.GetUserListVO
+     * @return com.graduation.project.risk.project.web.vo.user.GetUserListVO
      * @Description get user list for selected
      * @Author Santos
      * @Date 2019-04-08
@@ -62,7 +62,7 @@ public class UserManager {
     }
 
     /**
-     * @return java.util.List<com.graduation.risk.project.web.vo.menu.MenuVO>
+     * @return java.util.List<com.graduation.project.risk.project.web.vo.menu.MenuVO>
      * @Description get user's permission menu
      * @Author Santos
      * @Date 2019-04-11
