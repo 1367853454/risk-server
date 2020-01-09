@@ -24,4 +24,6 @@ public class RuleSimulationVO {
 
     List<RuleSimulationListVO> ruleSimulationListVOList;//审核结果列表
 
+    private List<String> xData;
+
 }

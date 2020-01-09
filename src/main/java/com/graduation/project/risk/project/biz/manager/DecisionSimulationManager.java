@@ -39,10 +39,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class DecisionSimulationManager {
@@ -208,6 +205,9 @@ public class DecisionSimulationManager {
             BigDecimal totalAmount = BigDecimal.ZERO;//所有的授信额度总和
 
             List<RuleSimulationListVO> ruleSimulationListVOList = new ArrayList<>();
+            List<String> xData = new ArrayList<>();
+            Set set = new HashSet();
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
             for (RiskOrderDTO riskOrderDTO : riskOrderDTOS) {
                 RuleSimulationListVO ruleSimulationListVO = new RuleSimulationListVO();
@@ -230,7 +230,9 @@ public class DecisionSimulationManager {
                     }
                 }
                 ruleSimulationListVO.setApplicationAmount(ppRiskLoanInfoDO.getApplicationAmount());
-                ruleSimulationListVO.setCreateTime(ppRiskLoanInfoDO.getCreateTime() + "");
+                String data = df(ppRiskLoanInfoDO.getCreateTime(),formatter);
+                ruleSimulationListVO.setCreateTime(data);
+                set.add(data);
                 ruleSimulationListVO.setBusinessName(ppRiskLoanInfoDO.getBusinessName());
                 ruleSimulationListVO.setFullName(ppRiskLoanInfoDO.getFullName());
                 ruleSimulationListVO.setMobile(ppRiskLoanInfoDO.getMobile());
@@ -241,7 +243,11 @@ public class DecisionSimulationManager {
 
                 redisService.delete(orderCode + CommonRuleEnums.SIMULATION.getCode());
             }
-
+            Iterator it = set.iterator();
+            while (it.hasNext()) {
+                xData.add((String) it.next());
+            }
+            ruleSimulationVO.setXData(xData);
             ruleSimulationVO.setTestUserNumber(testUserNumber);
             ruleSimulationVO.setFailNumber(failNumber);
             ruleSimulationVO.setSuccessNumber(successNumber);
@@ -257,6 +263,13 @@ public class DecisionSimulationManager {
         return null;
 
 
+    }
+
+    private String df(Date date, SimpleDateFormat formatter) {
+
+        String StringDate = formatter.format(date);
+
+        return StringDate;
     }
 
     /**
